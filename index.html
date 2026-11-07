@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deepavali Food Guessing Game 🪔</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #2c0a4a, #4a1c6b, #6b2d8b);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      color: #fff;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      border-radius: 24px;
+      padding: 30px;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+      color: #ffd700;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      opacity: 0.9;
+      margin-bottom: 25px;
+    }
+
+    .score-board {
+      background: rgba(255, 215, 0, 0.15);
+      border-radius: 50px;
+      padding: 8px 20px;
+      display: inline-block;
+      margin-bottom: 20px;
+      font-weight: 600;
+      color: #ffd700;
+    }
+
+    .food-image {
+      width: 100%;
+      max-width: 320px;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 16px;
+      border: 3px solid #ffd700;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      margin: 0 auto 25px;
+      display: block;
+      background: #333;
+    }
+
+    .question {
+      font-size: 1.25rem;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .options {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 25px;
+    }
+
+    .option-btn {
+      background: rgba(255, 255, 255, 0.15);
+      border: 2px solid transparent;
+      color: white;
+      padding: 14px;
+      border-radius: 14px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      background: rgba(255, 215, 0, 0.25);
+      border-color: #ffd700;
+      transform: translateY(-2px);
+    }
+
+    .option-btn.correct {
+      background: #2ecc71;
+      border-color: #27ae60;
+    }
+
+    .option-btn.wrong {
+      background: #e74c3c;
+      border-color: #c0392b;
+    }
+
+    .option-btn:disabled {
+      cursor: not-allowed;
+    }
+
+    .feedback {
+      font-size: 1.1rem;
+      font-weight: 600;
+      min-height: 28px;
+      margin-bottom: 15px;
+    }
+
+    .next-btn, .restart-btn {
+      background: linear-gradient(135deg, #ffd700, #ffaa00);
+      color: #2c0a4a;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 50px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: none;
+    }
+
+    .next-btn:hover, .restart-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4);
+    }
+
+    .final-screen {
+      display: none;
+    }
+
+    .final-score {
+      font-size: 3rem;
+      color: #ffd700;
+      margin: 20px 0;
+      text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+    }
+
+    .diya {
+      font-size: 2.5rem;
+      margin: 10px 0;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px;
+      }
+      h1 {
+        font-size: 1.5rem;
+      }
+      .food-image {
+        height: 180px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Game Screen -->
+    <div id="game-screen">
+      <h1>🪔 Deepavali Food Quiz</h1>
+      <p class="subtitle">Guess the Malaysian Deepavali treat!</p>
+      
+      <div class="score-board">
+        Score: <span id="score">0</span> / <span id="total">6</span>
+      </div>
+
+      <img id="food-img" class="food-image" src="" alt="Deepavali Food">
+      
+      <div class="question" id="question-text">What is this food called?</div>
+      
+      <div class="options" id="options"></div>
+      
+      <div class="feedback" id="feedback"></div>
+      
+      <button class="next-btn" id="next-btn">Next →</button>
+    </div>
+
+    <!-- Final Screen -->
+    <div class="final-screen" id="final-screen">
+      <div class="diya">🪔✨🪔</div>
+      <h1>Happy Deepavali!</h1>
+      <p>Your final score is</p>
+      <div class="final-score" id="final-score">0/6</div>
+      <p id="result-message"></p>
+      <br>
+      <button class="restart-btn" id="restart-btn">Play Again</button>
+    </div>
+  </div>
+
+  <script>
+    const foods = [
+      {
+        name: "Murukku",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Murukku_or_Chakli.jpg/640px-Murukku_or_Chakli.jpg",
+        options: ["Murukku", "Jalebi", "Laddu", "Vadai"]
+      },
+      {
+        name: "Laddu",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Besan_ke_laddoo_Indian_festivals_hero.JPG/640px-Besan_ke_laddoo_Indian_festivals_hero.JPG",
+        options: ["Gulab Jamun", "Laddu", "Mysore Pak", "Barfi"]
+      },
+      {
+        name: "Jalebi",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Jilipi.jpg/640px-Jilipi.jpg",
+        options: ["Jalebi", "Adhirasam", "Murukku", "Achu Murukku"]
+      },
+      {
+        name: "Gulab Jamun",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Gulab_jamun_%28Gibraltar%2C_November_2020%29.jpg/640px-Gulab_jamun_%28Gibraltar%2C_November_2020%29.jpg",
+        options: ["Rasgulla", "Gulab Jamun", "Laddu", "Kaju Katli"]
+      },
+      {
+        name: "Nei Urundai",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Besan_ke_laddoo_Indian_festivals_hero.JPG/640px-Besan_ke_laddoo_Indian_festivals_hero.JPG",
+        options: ["Nei Urundai", "Coconut Candy", "Mysore Pak", "Peda"]
+      },
+      {
+        name: "Achu Murukku",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Murukku_or_Chakli.jpg/640px-Murukku_or_Chakli.jpg",
+        options: ["Ribbon Murukku", "Achu Murukku", "Omapodi", "Thattai"]
+      }
+    ];
+
+    let currentIndex = 0;
+    let score = 0;
+    let answered = false;
+
+    const scoreEl = document.getElementById('score');
+    const totalEl = document.getElementById('total');
+    const foodImg = document.getElementById('food-img');
+    const questionText = document.getElementById('question-text');
+    const optionsEl = document.getElementById('options');
+    const feedbackEl = document.getElementById('feedback');
+    const nextBtn = document.getElementById('next-btn');
+    const gameScreen = document.getElementById('game-screen');
+    const finalScreen = document.getElementById('final-screen');
+    const finalScoreEl = document.getElementById('final-score');
+    const resultMessage = document.getElementById('result-message');
+    const restartBtn = document.getElementById('restart-btn');
+
+    totalEl.textContent = foods.length;
+
+    function shuffle(array) {
+      return array.sort(() => Math.random() - 0.5);
+    }
+
+    function loadQuestion() {
+      answered = false;
+      feedbackEl.textContent = '';
+      nextBtn.style.display = 'none';
+
+      const food = foods[currentIndex];
+      foodImg.src = food.image;
+      foodImg.alt = food.name;
+      questionText.textContent = "What is this Deepavali food called?";
+
+      const shuffledOptions = shuffle([...food.options]);
+      optionsEl.innerHTML = '';
+
+      shuffledOptions.forEach(option => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = option;
+        btn.onclick = () => selectAnswer(option, food.name, btn);
+        optionsEl.appendChild(btn);
+      });
+    }
+
+    function selectAnswer(selected, correct, btn) {
+      if (answered) return;
+      answered = true;
+
+      const allBtns = document.querySelectorAll('.option-btn');
+      allBtns.forEach(b => {
+        b.disabled = true;
+        if (b.textContent === correct) {
+          b.classList.add('correct');
+        }
+      });
+
+      if (selected === correct) {
+        score++;
+        scoreEl.textContent = score;
+        feedbackEl.textContent = "✅ Correct! Delicious choice!";
+        feedbackEl.style.color = "#2ecc71";
+      } else {
+        btn.classList.add('wrong');
+        feedbackEl.textContent = `❌ Oops! It's ${correct}`;
+        feedbackEl.style.color = "#e74c3c";
+      }
+
+      nextBtn.style.display = 'inline-block';
+    }
+
+    nextBtn.onclick = () => {
+      currentIndex++;
+      if (currentIndex < foods.length) {
+        loadQuestion();
+      } else {
+        showFinal();
+      }
+    };
+
+    function showFinal() {
+      gameScreen.style.display = 'none';
+      finalScreen.style.display = 'block';
+      finalScoreEl.textContent = `${score}/${foods.length}`;
+
+      if (score === foods.length) {
+        resultMessage.textContent = "Perfect! You're a true Deepavali food expert! 🪔🎉";
+      } else if (score >= 4) {
+        resultMessage.textContent = "Great job! You know your festive snacks well!";
+      } else if (score >= 2) {
+        resultMessage.textContent = "Not bad! Keep practising those Deepavali flavours!";
+      } else {
+        resultMessage.textContent = "Time to visit more Deepavali open houses! 😄";
+      }
+    }
+
+    restartBtn.onclick = () => {
+      currentIndex = 0;
+      score = 0;
+      scoreEl.textContent = 0;
+      gameScreen.style.display = 'block';
+      finalScreen.style.display = 'none';
+      loadQuestion();
+    };
+
+    // Start the game
+    loadQuestion();
+  </script>
+</body>
+</html>
